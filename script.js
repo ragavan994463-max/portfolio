@@ -1,40 +1,10 @@
-// ==============================
-// Portfolio JavaScript
-// Author: Raghavan
-// ==============================
+window.addEventListener("scroll",()=>{
 
-console.log("Portfolio Loaded Successfully!");
+document.querySelector(".ai-card")
+.style.transform =
+`rotateY(${window.scrollY/20}deg)`;
 
-// Smooth fade-in
-window.addEventListener("load", () => {
-    document.body.style.opacity = "1";
 });
-
-// Current Year
-const year = document.getElementById("year");
-if (year) {
-    year.textContent = new Date().getFullYear();
-}
-
-// Typing Animation
-const typingElement = document.getElementById("typing");
-
-const words = [
-    "AI Developer",
-    "Python Programmer",
-    "Machine Learning Enthusiast",
-    "Kaggle Competitor",
-    "Open Source Contributor"
-];
-
-let wordIndex = 0;
-let charIndex = 0;
-let deleting = false;
-
-function typingEffect() {
-
-    if (!typingElement) return;
-
     const currentWord = words[wordIndex];
 
     if (!deleting) {
