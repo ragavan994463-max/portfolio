@@ -1,106 +1,308 @@
-window.addEventListener("scroll",()=>{
+////////////////////////////////////////////////////
+// PREMIUM PORTFOLIO JAVASCRIPT
+////////////////////////////////////////////////////
 
-document.querySelector(".ai-card")
-.style.transform =
-`rotateY(${window.scrollY/20}deg)`;
+
+
+// Loader Removal
+
+window.addEventListener("load",()=>{
+
+const loader=document.getElementById("loader");
+
+setTimeout(()=>{
+
+loader.style.opacity="0";
+
+setTimeout(()=>{
+
+loader.style.display="none";
+
+},700);
+
+
+},1200);
+
 
 });
-    const currentWord = words[wordIndex];
 
-    if (!deleting) {
 
-        typingElement.textContent =
-            currentWord.substring(0, charIndex++);
 
-        if (charIndex > currentWord.length) {
-            deleting = true;
 
-            setTimeout(typingEffect, 1200);
-            return;
-        }
 
-    } else {
 
-        typingElement.textContent =
-            currentWord.substring(0, charIndex--);
 
-        if (charIndex < 0) {
+// Custom Cursor
 
-            deleting = false;
 
-            wordIndex++;
+const cursor=document.querySelector(".cursor");
 
-            if (wordIndex >= words.length)
-                wordIndex = 0;
-        }
 
-    }
+document.addEventListener("mousemove",(e)=>{
 
-    setTimeout(
-        typingEffect,
-        deleting ? 50 : 100
-    );
+cursor.style.left=e.clientX+"px";
+
+cursor.style.top=e.clientY+"px";
+
+
+});
+
+
+
+document.querySelectorAll("a,.project-card")
+.forEach(item=>{
+
+
+item.addEventListener("mouseenter",()=>{
+
+cursor.style.transform="scale(2)";
+
+});
+
+
+item.addEventListener("mouseleave",()=>{
+
+cursor.style.transform="scale(1)";
+
+});
+
+
+});
+
+
+
+
+
+
+
+// Particle AI Background
+
+
+const canvas=document.getElementById("particles");
+
+const ctx=canvas.getContext("2d");
+
+
+canvas.width=window.innerWidth;
+
+canvas.height=window.innerHeight;
+
+
+
+let particles=[];
+
+
+class Particle{
+
+
+constructor(){
+
+this.x=Math.random()*canvas.width;
+
+this.y=Math.random()*canvas.height;
+
+this.size=Math.random()*3+1;
+
+this.speedX=(Math.random()-0.5);
+
+this.speedY=(Math.random()-0.5);
+
 }
 
-typingEffect();
 
-// Reveal Animation
-const observer = new IntersectionObserver((entries) => {
+update(){
 
-    entries.forEach(entry => {
+this.x+=this.speedX;
 
-        if (entry.isIntersecting) {
+this.y+=this.speedY;
 
-            entry.target.classList.add("show");
 
-        }
+if(this.x<0||this.x>canvas.width)
+this.speedX*=-1;
 
-    });
+
+if(this.y<0||this.y>canvas.height)
+this.speedY*=-1;
+
+
+}
+
+
+
+draw(){
+
+ctx.beginPath();
+
+ctx.arc(
+this.x,
+this.y,
+this.size,
+0,
+Math.PI*2
+);
+
+
+ctx.fillStyle="#38bdf8";
+
+ctx.fill();
+
+}
+
+
+}
+
+
+
+function createParticles(){
+
+
+for(let i=0;i<120;i++){
+
+particles.push(new Particle());
+
+}
+
+
+}
+
+
+createParticles();
+
+
+
+
+function connectParticles(){
+
+
+for(let a=0;a<particles.length;a++){
+
+
+for(let b=a;b<particles.length;b++){
+
+
+let distance=
+
+Math.sqrt(
+
+Math.pow(
+particles[a].x-particles[b].x,
+2)
+
++
+
+Math.pow(
+particles[a].y-particles[b].y,
+2)
+
+);
+
+
+
+if(distance<120){
+
+
+ctx.beginPath();
+
+ctx.strokeStyle="rgba(56,189,248,0.15)";
+
+ctx.lineWidth=1;
+
+ctx.moveTo(
+particles[a].x,
+particles[a].y
+);
+
+
+ctx.lineTo(
+particles[b].x,
+particles[b].y
+);
+
+
+ctx.stroke();
+
+
+
+}
+
+
+
+}
+
+
+}
+
+
+
+}
+
+
+
+
+function animateParticles(){
+
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+
+
+particles.forEach(p=>{
+
+p.update();
+
+p.draw();
 
 });
 
-document.querySelectorAll(".hidden").forEach(item => {
 
-    observer.observe(item);
+connectParticles();
+
+
+requestAnimationFrame(
+animateParticles
+);
+
+
+}
+
+
+
+animateParticles();
+
+
+
+
+
+
+window.addEventListener("resize",()=>{
+
+
+canvas.width=window.innerWidth;
+
+canvas.height=window.innerHeight;
+
 
 });
 
-// Scroll To Top Button
 
-const topButton = document.createElement("button");
 
-topButton.innerHTML = "⬆";
 
-topButton.id = "topButton";
 
-document.body.appendChild(topButton);
 
-topButton.style.position = "fixed";
 
-topButton.style.bottom = "20px";
 
-topButton.style.right = "20px";
+// 3D Project Card Tilt
 
-topButton.style.padding = "12px";
 
-topButton.style.borderRadius = "50%";
+const cards=document.querySelectorAll(
+".project-card"
+);
 
-topButton.style.border = "none";
 
-topButton.style.cursor = "pointer";
 
-topButton.style.display = "none";
-
-topButton.style.fontSize = "20px";
-
-window.addEventListener("scroll", () => {
-
-    if (window.scrollY > 250) {
-
-        topButton.style.display = "block";
-
-    } else {
-
-        topButton.style.display = "none";
-
-    }
+cards.forEach(card=>
